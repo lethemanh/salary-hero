@@ -1,0 +1,1018 @@
+openapi: 3.0.1
+info:
+  title: Swagger Salary Hero API
+  description: >-
+    This is swagger for Salary Hero API
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    email: themanhle1234@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: 'http://swagger.io'
+servers:
+  - url: http://localhost:8080/salary-hero
+    description: Localhost testing
+tags:
+  - name: healthcheck
+    description: healthcheck API
+  - name: csv-v1
+    description: csv API
+  - name: hash-reward-engine-v1
+    description: hash reward engine API
+  - name: instant-win-games-v1
+    description: Instant win game API
+  - name: file-v1
+    description: File API
+  - name: gift-v1
+    description: Gift API
+  - name: gift-instance-v1
+    description: Gift Instance API
+  - name: config-v1
+    description: Config API
+
+paths:
+  /v1/health:
+    get:
+      tags:
+        - healthcheck
+      summary: Health Check
+      description: /v1/health
+      operationId: healthcheck
+      responses:
+        200:
+          description: health check success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service Up
+
+  /v1/files/s3-presign:
+    post:
+      tags:
+        - file-v1
+      summary: Get s3 presign url
+      description: /v1/files/s3-presign
+      parameters:
+        - in: body
+          required: true
+          name: request
+          type: object
+          properties:
+            type:
+              type: string
+              example: upload
+
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: Success
+        400:
+          description: Bad Request
+
+  /v1/csv/gifts:
+    post:
+      tags:
+        - csv-v1
+      summary: Import gift from csv v1
+      description: /v1/csv/gifts
+      parameters:
+        - in: body
+          required: true
+          schema:
+            type: csvFile
+            properties:
+              type: string
+              format: binary
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: Success
+        400:
+          description: Bad Request
+
+  /v1/csv/gift-instances:
+    post:
+      tags:
+        - csv-v1
+      summary: Import gift instances from csv v1
+      description: /v1/csv/gift-instances
+      parameters:
+        - in: body
+          required: true
+          schema:
+            type: csvFile
+            properties:
+              type: string
+              format: binary
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: Success
+        400:
+          description: Bad Request
+
+  /v1/csv/hash-rewards:
+    post:
+      tags:
+        - csv-v1
+      summary: Import hash rewards from csv v1
+      description: /v1/csv/hash-rewards
+      parameters:
+        - in: body
+          required: true
+          schema:
+            type: csvFile
+            properties:
+              type: string
+              format: binary
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: Success
+        400:
+          description: Bad Request
+
+  /v1/hash-reward-engines:
+    get:
+      tags:
+        - hash-reward-engine-v1
+      summary: Find hash rewards
+      description: /v1/hash-reward-engines
+      parameters:
+        - name: ids
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - name: limit
+          required: false
+          schema:
+            type: interger
+        - name: skip
+          required: false
+          schema:
+            type: interger
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: List of hash reward
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  skip:
+                    type: interger
+                    example: 0
+                  total:
+                    type: interger
+                    example: 100
+                  data:
+                    type: array
+                    items:
+                      oneOf:
+                        - $ref: '#/components/schemas/HashRewardEngine'
+        400:
+          description: Bad Request
+    post:
+      tags:
+        - hash-reward-engine-v1
+      summary: Create hash reward
+      description: /v1/hash-reward-engines
+      parameters:
+        - in: body
+          name: hashReward
+          required: true
+          schema:
+            $ref: '#/components/schemas/HashRewardEngineReqBody'
+
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: Hash reward item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HashRewardEngine'
+        400:
+          description: Bad Request
+
+  /v1/hash-reward-engines/{id}:
+    get:
+      tags:
+        - hash-reward-engine-v1
+      summary: Get hash reward
+      description: /v1/hash-reward-engines/{id}
+      parameters:
+        - name: id
+          required: true
+          schema:
+            type: string
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: Hash reward item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HashRewardEngine'
+        400:
+          description: Bad Request
+    put:
+      tags:
+        - hash-reward-engine-v1
+      summary: Update hash reward
+      description: /v1/hash-reward-engines
+      parameters:
+        - name: id
+          required: true
+          schema:
+            type: string
+        - in: body
+          name: hashReward
+          required: true
+          schema:
+            $ref: '#/components/schemas/HashRewardEngineReqBody'
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: Hash reward item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HashRewardEngine'
+        400:
+          description: Bad Request
+    delete:
+      tags:
+        - hash-reward-engine-v1
+      summary: Delete hash reward
+      description: /v1/hash-reward-engines
+      parameters:
+        - name: id
+          required: true
+          schema:
+            type: string
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+
+  /v1/instant-win-games/{so_number}:
+    get:
+      tags:
+        - instant-win-games-v1
+      summary: Get game detail
+      description: /v1/instant-win-games/{so_number}
+      parameters:
+        - name: so_number
+          required: true
+          schema:
+            type: string
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: Game detail item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameDetailResponse'
+        400:
+          description: Bad Request
+
+  /v1/gifts:
+    get:
+      tags:
+        - gift-v1
+      summary: Find gifts
+      description: /v1/gifts
+      parameters:
+        - name: ids
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - name: keyword
+          required: false
+          schema:
+            type: string
+        - name: type
+          required: false
+          schema:
+            type: string
+        - name: limit
+          required: false
+          schema:
+            type: interger
+        - name: skip
+          required: false
+          schema:
+            type: interger
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: List of gift
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  skip:
+                    type: interger
+                    example: 0
+                  total:
+                    type: interger
+                    example: 100
+                  data:
+                    type: array
+                    items:
+                      oneOf:
+                        - $ref: '#/components/schemas/GiftResponse'
+        400:
+          description: Bad Request
+    post:
+      tags:
+        - gift-v1
+      summary: Create gift
+      description: /v1/gifts
+      parameters:
+        - in: body
+          name: gift
+          required: true
+          schema:
+            $ref: '#/components/schemas/GiftReqBody'
+
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: Gift item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GiftResponse'
+        400:
+          description: Bad Request
+
+  /v1/gifts/{id}:
+    get:
+      tags:
+        - gift-v1
+      summary: Get gift
+      description: /v1/gifts/{id}
+      parameters:
+        - name: id
+          required: true
+          schema:
+            type: string
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: Gift item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GiftResponse'
+        400:
+          description: Bad Request
+    put:
+      tags:
+        - gift-v1
+      summary: Update gift
+      description: /v1/gifts/{id}
+      parameters:
+        - name: id
+          required: true
+          schema:
+            type: string
+        - in: body
+          name: gift
+          required: true
+          schema:
+            $ref: '#/components/schemas/GiftReqBody'
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: Gift item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GiftResponse'
+        400:
+          description: Bad Request
+    delete:
+      tags:
+        - gift-v1
+      summary: Delete gift
+      description: /v1/gifts/{id}
+      parameters:
+        - name: id
+          required: true
+          schema:
+            type: string
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+
+  /v1/gift-instances:
+    get:
+      tags:
+        - gift-instance-v1
+      summary: Find gift instances
+      description: /v1/gift-instances
+      parameters:
+        - name: ids
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - name: status
+          required: false
+          schema:
+            type: string
+            enum: [AVAILABLE, ALLOCATED]
+        - name: limit
+          required: false
+          schema:
+            type: interger
+        - name: skip
+          required: false
+          schema:
+            type: interger
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: List of gift intance
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  skip:
+                    type: interger
+                    example: 0
+                  total:
+                    type: interger
+                    example: 100
+                  data:
+                    type: array
+                    items:
+                      oneOf:
+                        - $ref: '#/components/schemas/GiftInstanceResponse'
+        400:
+          description: Bad Request
+    post:
+      tags:
+        - gift-instance-v1
+      summary: Create gift instance
+      description: /v1/gift-instances
+      parameters:
+        - in: body
+          name: gift
+          required: true
+          schema:
+            $ref: '#/components/schemas/GiftInstanceReqBody'
+
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: Gift instance item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GiftInstanceResponse'
+        400:
+          description: Bad Request
+
+  /v1/gift-instances/{id}:
+    get:
+      tags:
+        - gift-instance-v1
+      summary: Get gift instance
+      description: /v1/gift-instances/{id}
+      parameters:
+        - name: id
+          required: true
+          schema:
+            type: string
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: Gift instance item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GiftInstanceResponse'
+        400:
+          description: Bad Request
+    put:
+      tags:
+        - gift-instance-v1
+      summary: Update gift instance
+      description: /v1/gift-instances/{id}
+      parameters:
+        - name: id
+          required: true
+          schema:
+            type: string
+        - in: body
+          name: gift
+          required: true
+          schema:
+            $ref: '#/components/schemas/GiftInstanceReqBody'
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: Gift instance item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GiftInstanceResponse'
+        400:
+          description: Bad Request
+    delete:
+      tags:
+        - gift-instance-v1
+      summary: Delete gift instance
+      description: /v1/gift-instances/{id}
+      parameters:
+        - name: id
+          required: true
+          schema:
+            type: string
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+
+  /v1/configs:
+    get:
+      tags:
+        - config-v1
+      summary: Find configs
+      description: /v1/configs
+      parameters:
+        - name: ids
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - name: keyword
+          required: false
+          schema:
+            type: string
+        - name: limit
+          required: false
+          schema:
+            type: interger
+        - name: skip
+          required: false
+          schema:
+            type: interger
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: List of config
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  skip:
+                    type: interger
+                    example: 0
+                  total:
+                    type: interger
+                    example: 100
+                  data:
+                    type: array
+                    items:
+                      oneOf:
+                        - $ref: '#/components/schemas/ConfigResponse'
+        400:
+          description: Bad Request
+    post:
+      tags:
+        - config-v1
+      summary: Create config
+      description: /v1/configs
+      parameters:
+        - in: body
+          name: config
+          required: true
+          schema:
+            $ref: '#/components/schemas/ConfigReqBody'
+
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: Config item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigResponse'
+        400:
+          description: Bad Request
+
+  /v1/configs/{id}:
+    get:
+      tags:
+        - config-v1
+      summary: Get config
+      description: /v1/configs/{id}
+      parameters:
+        - name: id
+          required: true
+          schema:
+            type: string
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: Config item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigResponse'
+        400:
+          description: Bad Request
+    put:
+      tags:
+        - config-v1
+      summary: Update config
+      description: /v1/configs/{id}
+      parameters:
+        - name: id
+          required: true
+          schema:
+            type: string
+        - in: body
+          name: config
+          required: true
+          schema:
+            $ref: '#/components/schemas/ConfigReqBody'
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: Config item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigResponse'
+        400:
+          description: Bad Request
+    delete:
+      tags:
+        - config-v1
+      summary: Delete config
+      description: /v1/configs/{id}
+      parameters:
+        - name: id
+          required: true
+          schema:
+            type: string
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+
+components:
+  schemas:
+    HashRewardEngine:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 618c81b0e9bf86599e9347f9
+        province_code:
+          type: string
+          example: VNHN
+        gift_id:
+          type: string
+          example: 618c81b0e9bf86599e9347f9
+        ov_bucket:
+          type: interger
+          example: 1
+        ctr_ov_bucket:
+          type: interger
+          example: 100
+        modulus:
+          type: interger
+          example: 1000
+        type:
+          type: string
+          enum: [DIGITAL, PHYSICAL]
+          example: DIGITAL
+        created_at:
+          type: string
+          expample: 2021-11-10T10:24:24.884Z
+        updated_at:
+          type: string
+          example: 2021-11-10T10:24:24.884Z
+
+    HashRewardEngineReqBody:
+      type: object
+      properties:
+        province_code:
+          type: string
+          require: false
+          example: VNHN
+        gift_id:
+          type: string
+          require: true
+          example: 618c81b0e9bf86599e9347f9
+        ov_bucket:
+          type: interger
+          require: true
+          example: 1
+        ctr_ov_bucket:
+          type: interger
+          require: true
+          example: 100
+        modulus:
+          type: interger
+          require: false
+          example: 1000
+        type:
+          type: string
+          require: true
+          enum: [DIGITAL, PHYSICAL]
+          example: DIGITAL
+
+    GiftResponse:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 619724a13ae81cfc4ffe71db
+        code:
+          type: string
+          example: VT10K
+        name:
+          type: string
+          example: Thẻ Viettel 10K
+        image:
+          type: string
+          example: https://google.com/images/ngoctrinh.png
+        type:
+          type: string
+          enum: [PHYSICAL, DIGITAL]
+          example: PHYSICAL
+        value:
+          type: interger
+          example: 10000
+        cost:
+          type: interger
+          example: 9700
+
+    GiftReqBody:
+      type: object
+      properties:
+        code:
+          type: string
+          example: VT10K
+        name:
+          type: string
+          example: Thẻ Viettel 10K
+        image:
+          type: string
+          example: https://google.com/images/ngoctrinh.png
+        type:
+          type: string
+          enum: [PHYSICAL, DIGITAL]
+          example: PHYSICAL
+        value:
+          type: interger
+          example: 10000
+        cost:
+          type: interger
+          example: 9700
+
+    GiftInstanceResponse:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 619724a13ae81cfc4ffe71db
+        code:
+          type: string
+          example: 4424835845
+        telco:
+          type: string
+          example: Viettel
+        serial_number:
+          type: string
+          example: 243HDYBFI23
+        status:
+          type: string
+          enum: [AVAILABLE, ALLOCATED]
+          example: AVAILABLE
+        expired:
+          type: date
+          example: 2021-11-10T10:24:24.884Z
+        gift_id:
+          type: object
+          properties:
+            _id:
+              type: string
+              example: 619724a13ae81cfc4ffe71db
+            code:
+              type: string
+              example: VT10K
+            name:
+              type: string
+              example: Thẻ Viettel 10K
+            image:
+              type: string
+              example: https://google.com/images/ngoctrinh.png
+            type:
+              type: string
+              enum: [PHYSICAL, DIGITAL]
+              example: PHYSICAL
+            value:
+              type: interger
+              example: 10000
+            cost:
+              type: interger
+              example: 9700
+
+    GiftInstanceReqBody:
+      type: object
+      properties:
+        code:
+          type: string
+          example: 4424835845
+        telco:
+          type: string
+          example: Viettel
+        serial_number:
+          type: string
+          example: 243HDYBFI23
+        status:
+          type: string
+          enum: [AVAILABLE, ALLOCATED]
+          example: AVAILABLE
+        expired:
+          type: date
+          example: 2021-11-10T10:24:24.884Z
+        gift_id:
+          type: string
+          example: 619724a13ae81cfc4ffe71db
+
+    GameDetailResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [CREATED, PLAYED]
+          example: PLAYED
+        so_number:
+          type: string
+          example: 1223232
+        customer_id:
+          type: interger
+          example: 20222
+        order_value:
+          type: integer
+          example: 1000000
+        created_at:
+          type: string
+          example: 2021-11-10T10:24:24.884Z
+        expired:
+          type: string
+          example: 2021-11-10T10:24:24.884Z
+        turnLog:
+          type: object
+          properties:
+            _id:
+              type: string
+              example: 618c81b0e9bf86599e9347f9
+            turn_id:
+              type: string
+              example: 618c81b0e9bf86599e9347f9
+            status:
+              type: string
+              enum: [ALLOCATED, CLAIMED]
+              example: ALLOCATED
+            value:
+              type: interger
+              example: 10000
+            gift:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Thẻ điện thoại Vịt teo 10K
+                code:
+                  type: string
+                  example: VT10K
+                image:
+                  type: string
+                  example: https://google.com/images/ngoctrinh.png
+                type:
+                  type: string
+                  example: DIGITAL
+                  enum: [DIGITAL, PHYSICAL]
+                value:
+                  type: interger
+                  example: 10000
+                cost:
+                  type: interger
+                  example: 9700
+            gift_instance_id:
+              type: string
+              expample: 618c81b0e9bf86599e9347f9
+            created_at:
+              type: string
+              example: 2021-11-10T10:24:24.884Z
+            allocated_at:
+              type: string
+              example: 2021-11-10T10:24:24.884Z
+            claimed_at:
+              type: string
+              example: 2021-11-10T10:24:24.884Z
+            claimed_by_ip:
+              type: string
+              example: 192.160.1.1
+            allocated_by_ip:
+              type: string
+              example: 192.160.1.1
+
+    ConfigResponse:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 619724a13ae81cfc4ffe71db
+        name:
+          type: string
+          example: LIMIT_OF_PLAYS
+        value:
+          type: any
+          example: 10
+        description:
+          type: string
+          example: maximum value of plays
+
+    ConfigReqBody:
+      type: object
+      properties:
+        name:
+          type: string
+          example: LIMIT_OF_PLAYS
+        value:
+          type: any
+          example: 10
+        description:
+          type: string
+          example: maximum value of plays
+
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: Authorization
+      in: header
