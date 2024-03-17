@@ -16,9 +16,9 @@ export const ErrorCodes: { [key: string]: CustomError } = {
     CODE: 'VALIDATION_ERROR',
     MESSAGE: 'Validation failed error',
   },
-  USER_WITH_ID_NOT_FOUND: {
-    CODE: 'USER_WITH_ID_NOT_FOUND',
-    MESSAGE: 'User with given id not found',
+  WORKER_WITH_ID_NOT_FOUND: {
+    CODE: 'WORKER_WITH_ID_NOT_FOUND',
+    MESSAGE: 'Worker with given id not found',
   },
   SERVICE_ERROR: {
     CODE: 'SERVICE_ERROR',
