@@ -85,4 +85,6 @@ CALCULATE_BALANCE_SCHEDULE_TIME = */1 * * * *
 
 4. Run docker-compose again to apply the change to the scheduler.
 
+You can access the [API document](http://localhost:3000/salary-hero/swagger-ui).
+
 By following the steps outlined in this document, you can manually test the flow in the Salary Hero system. Verify that each step is executed successfully to ensure the system functions as expected.
