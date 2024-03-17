@@ -5,29 +5,24 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     try {
       await queryInterface.createTable(
-        'workers',
+        'balance_histories',
         {
           id: {
             type: Sequelize.DataTypes.BIGINT,
             autoIncrement: true,
             primaryKey: true,
           },
-          worker_name: {
-            type: Sequelize.DataTypes.STRING,
+          worker_id: {
+            type: Sequelize.DataTypes.BIGINT,
             allowNull: false,
           },
-          salary: {
+          old_balance: {
             type: Sequelize.DataTypes.DECIMAL,
             allowNull: false,
           },
-          salary_type: {
-            type: Sequelize.DataTypes.ENUM('DAILY', 'MONTHLY'),
-            allowNull: false,
-          },
-          current_balance: {
+          new_balance: {
             type: Sequelize.DataTypes.DECIMAL,
-            allowNull: true,
-            defaultValue: 0,
+            allowNull: false,
           },
           created_at: {
             type: Sequelize.DataTypes.DATE,
@@ -40,22 +35,34 @@ module.exports = {
         },
         { schema: process.env.POSTGRES_SCHEMA }
       );
-      console.log('CREATE TABLE WORKERS SUCCESS');
+      console.log('CREATE TABLE BALANCE HISTORIES SUCCESS');
 
-      await queryInterface.addIndex({ tableName: 'workers', schema: process.env.POSTGRES_SCHEMA }, ['salary_type'], {
-        name: 'idx-workers-salary_type',
-      });
+      await queryInterface.addIndex(
+        { tableName: 'balance_histories', schema: process.env.POSTGRES_SCHEMA },
+        ['worker_id'],
+        {
+          name: 'idx-balance_histories-worker_id',
+        }
+      );
 
-      console.log('CREATE INDEX OF TABLE WORKERS SUCCESS');
+      await queryInterface.addIndex(
+        { tableName: 'balance_histories', schema: process.env.POSTGRES_SCHEMA },
+        ['created_at'],
+        {
+          name: 'idx-balance_histories-created_at',
+        }
+      );
+
+      console.log('CREATE INDEX OF TABLE BALANCE HISTORIES SUCCESS');
     } catch (error) {
-      console.error(`CREATE WORKERS ERROR: ${JSON.stringify(error)}`);
+      console.error(`CREATE BALANCE HISTORIES ERROR: ${JSON.stringify(error)}`);
       throw error;
     }
   },
 
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable({
-      tableName: 'workers',
+      tableName: 'balance_histories',
       schema: process.env.POSTGRES_SCHEMA,
     });
   },

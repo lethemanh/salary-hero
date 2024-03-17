@@ -1,20 +1,27 @@
 import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
 import { MODEL_NAME, SCHEMA } from './constants';
-import { AttendanceInterface } from './types/attendances';
+import { BalanceHistoryInterface } from './types/balanceHistories';
 
-export type AttendanceCreateInterface = Optional<AttendanceInterface, 'id'>;
+export type BalanceHistoryCreateInterface = Optional<BalanceHistoryInterface, 'id'>;
 
-export class Attendance extends Model<AttendanceInterface, AttendanceCreateInterface> implements AttendanceInterface {
+export class BalanceHistory
+  extends Model<BalanceHistoryInterface, BalanceHistoryCreateInterface>
+  implements BalanceHistoryInterface
+{
   id!: number;
 
   worker_id: number;
+
+  old_balance: number;
+
+  new_balance: number;
 
   readonly created_at?: Date;
 
   readonly updated_at?: Date;
 
-  static initModel(sequelize: Sequelize): typeof Attendance {
-    Attendance.init(
+  static initModel(sequelize: Sequelize): typeof BalanceHistory {
+    BalanceHistory.init(
       {
         id: {
           type: DataTypes.BIGINT,
@@ -25,10 +32,18 @@ export class Attendance extends Model<AttendanceInterface, AttendanceCreateInter
           type: DataTypes.BIGINT,
           allowNull: false,
         },
+        old_balance: {
+          type: DataTypes.DECIMAL,
+          allowNull: false,
+        },
+        new_balance: {
+          type: DataTypes.DECIMAL,
+          allowNull: false,
+        },
       },
       {
         sequelize,
-        modelName: MODEL_NAME.ATTENDANCES,
+        modelName: MODEL_NAME.BALANCE_HISTORIES,
         schema: SCHEMA,
         timestamps: true,
         createdAt: 'created_at',
@@ -46,6 +61,6 @@ export class Attendance extends Model<AttendanceInterface, AttendanceCreateInter
       }
     );
 
-    return Attendance;
+    return BalanceHistory;
   }
 }

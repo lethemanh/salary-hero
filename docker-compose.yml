@@ -33,6 +33,19 @@ services:
       - salary-hero-net
     restart: always
 
+  balance-calculator:
+    container_name: balance-calculator
+    image: salary-hero
+    command: npm run start:job
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - salary-hero
+    networks:
+      - salary-hero-net
+    restart: always
+
   migration:
     image: salary-hero
     env_file:

@@ -28,6 +28,16 @@ module.exports = {
         { schema: process.env.POSTGRES_SCHEMA }
       );
       console.log('CREATE TABLE ATTENDANCES SUCCESS');
+
+      await queryInterface.addIndex({ tableName: 'attendances', schema: process.env.POSTGRES_SCHEMA }, ['worker_id'], {
+        name: 'idx-attendances-worker_id',
+      });
+
+      await queryInterface.addIndex({ tableName: 'attendances', schema: process.env.POSTGRES_SCHEMA }, ['created_at'], {
+        name: 'idx-attendances-created_at',
+      });
+
+      console.log('CREATE INDEX OF TABLE ATTENDANCES SUCCESS');
     } catch (error) {
       console.error(`CREATE ATTENDANCES ERROR: ${JSON.stringify(error)}`);
       throw error;
