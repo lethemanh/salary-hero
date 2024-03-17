@@ -22,4 +22,7 @@ export default {
     password: process.env.POSTGRES_PASSWORD,
     port: process.env.POSTGRES_PORT,
   },
+  job: {
+    calculateBalanceTime: process.env.CALCULATE_BALANCE_SCHEDULE_TIME,
+  },
 };

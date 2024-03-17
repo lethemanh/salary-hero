@@ -32,7 +32,7 @@ export class Worker extends Model<WorkerInterface, WorkerCreateInterface> implem
           allowNull: false,
         },
         salary: {
-          type: DataTypes.BIGINT,
+          type: DataTypes.DECIMAL,
           allowNull: false,
         },
         salary_type: {
@@ -40,8 +40,9 @@ export class Worker extends Model<WorkerInterface, WorkerCreateInterface> implem
           allowNull: false,
         },
         current_balance: {
-          type: DataTypes.BIGINT,
+          type: DataTypes.DECIMAL,
           allowNull: true,
+          defaultValue: 0,
         },
       },
       {
