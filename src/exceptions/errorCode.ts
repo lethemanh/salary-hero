@@ -32,4 +32,8 @@ export const ErrorCodes: { [key: string]: CustomError } = {
     CODE: 'BAD_REQUEST',
     MESSAGE: 'Bad request',
   },
+  WORKER_ATTENDED_TODAY: {
+    CODE: 'WORKER_ATTENDED_TODAY',
+    MESSAGE: 'Worker have attended today',
+  },
 };
