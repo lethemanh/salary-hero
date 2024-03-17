@@ -4,10 +4,7 @@ import { SalaryType, WorkerInterface } from './types/workers';
 
 export type WorkerCreateInterface = Optional<WorkerInterface, 'id'>;
 
-export class Worker
-  extends Model<WorkerInterface, WorkerCreateInterface>
-  implements WorkerInterface
-{
+export class Worker extends Model<WorkerInterface, WorkerCreateInterface> implements WorkerInterface {
   id!: number;
 
   worker_name: string;
