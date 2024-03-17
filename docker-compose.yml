@@ -33,15 +33,15 @@ services:
       - salary-hero-net
     restart: always
 
-  # migration:
-  #   image: salary-hero
-  #   env_file:
-  #     - .env
-  #   command: npm run migration:up
-  #   depends_on:
-  #     - postgres
-  #   networks:
-  #     - salary-hero-net
+  migration:
+    image: salary-hero
+    env_file:
+      - .env
+    command: npm run migration:up
+    depends_on:
+      - postgres
+    networks:
+      - salary-hero-net
 
 networks:
   salary-hero-net:
